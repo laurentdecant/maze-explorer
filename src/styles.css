@@ -1,0 +1,66 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.grid {
+  border-top: 4px solid black;
+  border-left: 4px solid black;
+  box-sizing: border-box;
+  background: black;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.grid .row {
+  display: flex;
+  flex-grow: 1;
+}
+
+.grid .row .cell {
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+.grid .row .cell::before,
+.grid .row .cell::after {
+  background: white;
+  content: "";
+  position: absolute;
+  height: calc(100% - 4px);
+  width: calc(100% - 4px);
+}
+
+.grid .row .cell.up::before {
+  top: -2px;
+  height: calc(100% - 2px);
+}
+
+.grid .row .cell.down::before {
+  bottom: -2px;
+  height: calc(100% + 2px);
+}
+
+.grid .row .cell.up.down::before {
+  height: 100%;
+}
+
+.grid .row .cell.right::after {
+  right: -2px;
+  width: calc(100% + 2px);
+}
+
+.grid .row .cell.left::after {
+  left: -2px;
+  width: calc(100% - 2px);
+}
+
+.grid .row .cell.right.left::after {
+  width: 100%;
+}
