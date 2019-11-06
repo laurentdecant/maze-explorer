@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "add11dee0f777dde3dc1c45e5511367f",
+    "revision": "e63f19068d986b86bc81aa7d0ec2bf6f",
     "url": "/maze-explorer/index.html"
   },
   {
