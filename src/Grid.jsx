@@ -1,16 +1,10 @@
 import React from "react";
-
-const ROWS = 54;
-const COLUMNS = 96;
-const UP = 1;
-const RIGHT = 2;
-const DOWN = 4;
-const LEFT = 8;
+import { ROWS, COLUMNS, UP, RIGHT, DOWN, LEFT } from "./constants";
 
 export default ({ grid }) => (
   <div className="grid">
     {grid.map((cells, row) => (
-      <div className="row">
+      <div key={row} className="row">
         {cells.map((cell, column) => {
           let className = "cell";
           if (cell & UP || (row > 0 && grid[row - 1][column] & DOWN)) {
