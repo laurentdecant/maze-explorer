@@ -1,5 +1,14 @@
 import React from "react";
-import { ROWS, COLUMNS, UP, RIGHT, DOWN, LEFT } from "./constants";
+import {
+  ROWS,
+  COLUMNS,
+  UP,
+  RIGHT,
+  DOWN,
+  LEFT,
+  VISITED,
+  PATH
+} from "./constants";
 
 export default ({ grid }) => (
   <div className="grid">
@@ -21,6 +30,12 @@ export default ({ grid }) => (
           }
           if (cell & LEFT || (column > 0 && grid[row][column - 1] & RIGHT)) {
             className += " left";
+          }
+          if (cell & VISITED) {
+            className += " visited";
+          }
+          if (cell & PATH) {
+            className += " path";
           }
           return <div key={`${row},${column}`} className={className} />;
         })}

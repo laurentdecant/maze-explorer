@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Grid from "./Grid";
-import { ROWS, COLUMNS, EMPTY, UP, RIGHT, DOWN, LEFT, FULL } from "./constants";
+import {
+  ROWS,
+  COLUMNS,
+  EMPTY,
+  UP,
+  RIGHT,
+  DOWN,
+  LEFT,
+  FULL,
+  VISITED,
+  PATH
+} from "./constants";
 
 const DIRECTIONS = [
   { value: UP, offsets: [-1, 0] },
@@ -11,7 +22,7 @@ const DIRECTIONS = [
 
 const grid = new Array(ROWS).fill().map(_ => new Array(COLUMNS).fill(EMPTY));
 const frames = [grid.map(row => row.slice())];
-const search = (row, column) => {
+const generate = (row, column) => {
   if (row === ROWS - 1 && column === COLUMNS - 1) {
     grid[row][column] = FULL;
     frames.push(grid.map(row => row.slice()));
@@ -31,9 +42,9 @@ const search = (row, column) => {
       .sort(() => Math.random() - 0.5);
     for (const { value, nextRow, nextColumn } of directions) {
       if (!grid[nextRow][nextColumn]) {
-        grid[row][column] = grid[row][column] | value;
+        grid[row][column] |= value;
         frames.push(grid.map(row => row.slice()));
-        search(nextRow, nextColumn);
+        generate(nextRow, nextColumn);
       }
     }
     if (!grid[row][column]) {
@@ -42,14 +53,60 @@ const search = (row, column) => {
     }
   }
 };
+generate(0, 0);
+
+const visits = new Map();
+const getNext = (row, column) => {
+  return DIRECTIONS.filter(({ value }) => grid[row][column] & value)
+    .map(({ offsets }) => [row + offsets[0], column + offsets[1]])
+    .filter(
+      ([row, column]) =>
+        row >= 0 &&
+        row < ROWS &&
+        column >= 0 &&
+        column < COLUMNS &&
+        !visits.has(`${row},${column}`)
+    );
+};
+const search = (row, column) => {
+  const queue = [[row, column]];
+  grid[row][column] |= VISITED;
+  frames.push(grid.map(row => row.slice()));
+  visits.set(`${row},${column}`, [-1, -1]);
+  while (queue.length) {
+    const [row, column] = queue.shift();
+    for (const [nextRow, nextColumn] of getNext(row, column)) {
+      queue.push([nextRow, nextColumn]);
+      grid[nextRow][nextColumn] |= VISITED;
+      frames.push(grid.map(row => row.slice()));
+      visits.set(`${nextRow},${nextColumn}`, [row, column]);
+      if (nextRow === ROWS - 1 && nextColumn === COLUMNS - 1) {
+        return;
+      }
+    }
+  }
+};
 search(0, 0);
+
+let path = [];
+for (
+  let [row, column] = [ROWS - 1, COLUMNS - 1];
+  visits.has(`${row},${column}`);
+  [row, column] = visits.get(`${row},${column}`)
+) {
+  path.push([row, column]);
+}
+for (const [row, column] of path.reverse()) {
+  grid[row][column] |= PATH;
+  frames.push(grid.map(row => row.slice()));
+}
 
 export default () => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setIndex(Math.max(0, Math.min(index + 8, frames.length - 1)));
+      setIndex(Math.max(0, Math.min(index + 2, frames.length - 1)));
     }, 1000 / 60);
     return () => clearTimeout(timeout);
   }, [index]);

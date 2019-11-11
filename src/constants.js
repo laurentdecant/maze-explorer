@@ -1,8 +1,10 @@
-export const ROWS = 54;
-export const COLUMNS = 96;
+export const ROWS = 27;
+export const COLUMNS = 48;
 export const EMPTY = 0;
 export const UP = 1;
 export const RIGHT = 2;
 export const DOWN = 4;
 export const LEFT = 8;
 export const FULL = 16;
+export const VISITED = 32;
+export const PATH = 64;

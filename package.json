@@ -1,8 +1,6 @@
 {
-  "name": "new",
+  "name": "maze-explorer",
   "version": "1.0.0",
-  "description": "",
-  "keywords": [],
   "main": "src/index.js",
   "homepage": "http://laurentdecant.github.io/maze-explorer",
   "dependencies": {
